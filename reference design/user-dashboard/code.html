@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verdant Ethos | Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d322b",
+              "outline": "#317d361a",
+              "on-tertiary-container": "#ffeef0",
+              "on-primary-container": "#ffffff",
+              "outline-variant": "#c0c9ba",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#c7e9c0",
+              "surface-container-high": "#e8eee8",
+              "on-surface-variant": "#40493e",
+              "on-primary-fixed-variant": "#005314",
+              "on-secondary-fixed-variant": "#314d2f",
+              "secondary": "#486645",
+              "surface-dim": "#f6f8f6",
+              "on-secondary": "#ffffff",
+              "surface-container-low": "#f6f8f6",
+              "on-surface": "#0f170f",
+              "tertiary-fixed": "#ffd9e2",
+              "on-secondary-fixed": "#052107",
+              "tertiary": "#913557",
+              "primary": "#317d36",
+              "tertiary-fixed-dim": "#ffb1c7",
+              "on-tertiary-fixed": "#3f001c",
+              "on-error": "#ffffff",
+              "primary-fixed-dim": "#8ad986",
+              "on-tertiary-fixed-variant": "#7e2648",
+              "inverse-on-surface": "#eef2e8",
+              "surface-variant": "#e0e4da",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#8ad986",
+              "background": "#f6f8f6",
+              "on-secondary-container": "#4c6a49",
+              "on-tertiary": "#ffffff",
+              "on-background": "#0f170f",
+              "error": "#ba1a1a",
+              "surface-tint": "#317d36",
+              "surface-container": "#f0f4f0",
+              "surface-bright": "#ffffff",
+              "tertiary-container": "#af4d6f",
+              "surface": "#ffffff",
+              "secondary-fixed-dim": "#aecfa8",
+              "primary-container": "#317d36",
+              "on-primary-fixed": "#002204",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#e0e8e0",
+              "primary-fixed": "#a5f6a0",
+              "secondary-fixed": "#caecc3"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .nature-wash {
+        background-image: linear-gradient(rgba(49, 125, 54, 0.05), rgba(49, 125, 54, 0.02));
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col h-full p-4 border-r border-green-800/5 transition-all duration-300">
+<div class="mb-8 px-4">
+<h1 class="text-2xl font-extrabold tracking-tighter text-green-800 dark:text-green-400">Verdant Ethos</h1>
+<p class="font-inter text-[10px] font-semibold uppercase tracking-widest text-slate-400 mt-1">Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-green-100/50 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-green-800/10 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-green-700 dark:hover:text-green-300 font-inter text-sm font-semibold uppercase tracking-widest transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Wrapper -->
+<div class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-green-800/10 dark:border-green-400/10 shadow-sm sticky top-0 z-50 flex justify-between items-center w-full px-8 py-3">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl" data-icon="search">search</span>
+<input class="w-full bg-primary/5 border-none rounded-xl pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-slate-400" placeholder="Search resources..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-green-800/10 mx-2"></div>
+<div class="flex items-center gap-3">
+<img alt="User Profile" class="h-10 w-10 rounded-full object-cover ring-2 ring-primary/10" data-alt="Close up of a professional male user smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzq31mJWxG2_G8VpH_XkJMwOfsZKQ0RpNsuNRdr6M13gOV5QDPhN09LU4aRzMOacvR6hma7fsxgUqlRZxjYFDJhEBuwvXUdF2MdJJn0OK7BdPK1f1ZkLykB8PQQ0MPcFkMhTU8A7jCn_BI2nJ4yL8adiKjelEftyxMEiegtoNCXoaFENx9oacaA2EqchX12zz5-J5i4NAs8vPSEMS0QIsTzg603Sswp-iovO2JaeH-txTr5fSSHwz-L7YX0-mM_w_cnddqJ2XNS18"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="p-8 flex-1 nature-wash">
+<!-- Welcome Header -->
+<section class="mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tighter text-on-surface mb-2">Welcome back, Julian</h2>
+<p class="text-lg text-secondary font-medium opacity-80">You have <span class="text-primary font-bold">12 active projects</span> that need your attention today.</p>
+</div>
+<button class="px-6 py-3 bg-primary text-on-primary rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
+                        New Report
+                    </button>
+</div>
+</section>
+<!-- Quick Stats Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<div class="bg-surface p-6 rounded-xl shadow-sm border border-primary/5 flex flex-col hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-secondary-fixed text-on-secondary-fixed rounded-lg">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</span>
+<span class="text-xs font-bold text-primary tracking-widest uppercase">+4.2%</span>
+</div>
+<p class="text-sm font-bold text-slate-500 tracking-widest uppercase mb-1">Total Projects</p>
+<p class="text-3xl font-extrabold tracking-tight">248</p>
+</div>
+<div class="bg-surface p-6 rounded-xl shadow-sm border border-primary/5 flex flex-col hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-tertiary-fixed text-on-tertiary-fixed rounded-lg">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+</span>
+<span class="text-xs font-bold text-tertiary tracking-widest uppercase">-12%</span>
+</div>
+<p class="text-sm font-bold text-slate-500 tracking-widest uppercase mb-1">Active Tasks</p>
+<p class="text-3xl font-extrabold tracking-tight">42</p>
+</div>
+<div class="bg-surface p-6 rounded-xl shadow-sm border border-primary/5 flex flex-col hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-primary-fixed text-on-primary-fixed-variant rounded-lg">
+<span class="material-symbols-outlined" data-icon="hourglass_empty">hourglass_empty</span>
+</span>
+<span class="text-xs font-bold text-primary tracking-widest uppercase">Stable</span>
+</div>
+<p class="text-sm font-bold text-slate-500 tracking-widest uppercase mb-1">Hours Logged</p>
+<p class="text-3xl font-extrabold tracking-tight">1,204</p>
+</div>
+<div class="bg-surface p-6 rounded-xl shadow-sm border border-primary/5 flex flex-col hover:shadow-md transition-all">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-secondary-container text-on-secondary-container rounded-lg">
+<span class="material-symbols-outlined" data-icon="mark_chat_unread">mark_chat_unread</span>
+</span>
+<span class="px-2 py-0.5 bg-error text-on-error text-[10px] rounded-full font-bold">New</span>
+</div>
+<p class="text-sm font-bold text-slate-500 tracking-widest uppercase mb-1">Unread Alerts</p>
+<p class="text-3xl font-extrabold tracking-tight">7</p>
+</div>
+</section>
+<!-- Main Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Recent Activity / Feed -->
+<section class="lg:col-span-2 bg-surface rounded-xl shadow-sm border border-primary/5 overflow-hidden">
+<div class="px-8 py-6 border-b border-primary/5 flex items-center justify-between">
+<h3 class="text-xl font-extrabold tracking-tight">Recent Activity</h3>
+<a class="text-sm font-bold text-primary hover:underline" href="#">View All Updates</a>
+</div>
+<div class="divide-y divide-primary/5">
+<div class="px-8 py-5 flex items-start gap-4 hover:bg-surface-container-low transition-colors">
+<div class="h-10 w-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="upload">upload</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-semibold">Julian uploaded <span class="text-primary">Q4 Sustainability Report.pdf</span></p>
+<p class="text-sm text-slate-500">2 hours ago • Project: EarthCare Initiatives</p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-slate-600 rounded-full text-xs font-bold tracking-widest uppercase">Report</span>
+</div>
+<div class="px-8 py-5 flex items-start gap-4 hover:bg-surface-container-low transition-colors">
+<div class="h-10 w-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="person_add">person_add</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-semibold">New team member joined: <span class="text-primary">Sarah Jenkins</span></p>
+<p class="text-sm text-slate-500">5 hours ago • Team: Design Conservatory</p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-slate-600 rounded-full text-xs font-bold tracking-widest uppercase">Team</span>
+</div>
+<div class="px-8 py-5 flex items-start gap-4 hover:bg-surface-container-low transition-colors">
+<div class="h-10 w-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-semibold">Task marked as complete: <span class="text-primary">Finalize Brand Anchors</span></p>
+<p class="text-sm text-slate-500">Yesterday • Project: Verdant Ethos DS</p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-slate-600 rounded-full text-xs font-bold tracking-widest uppercase">Task</span>
+</div>
+<div class="px-8 py-5 flex items-start gap-4 hover:bg-surface-container-low transition-colors">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="chat">chat</span>
+</div>
+<div class="flex-1">
+<p class="text-on-surface font-semibold">New comment on <span class="text-primary">Recycled Paper Textures</span></p>
+<p class="text-sm text-slate-500">Yesterday • From: Marcus Vane</p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-slate-600 rounded-full text-xs font-bold tracking-widest uppercase">Social</span>
+</div>
+</div>
+</section>
+<!-- Quick Actions Sidebar (Central Right) -->
+<section class="space-y-8">
+<div class="bg-surface p-8 rounded-xl shadow-sm border border-primary/5">
+<h3 class="text-xl font-extrabold tracking-tight mb-6">Quick Actions</h3>
+<div class="grid grid-cols-1 gap-3">
+<button class="w-full text-left p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all flex items-center gap-4 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="create_new_folder">create_new_folder</span>
+<span class="font-bold text-sm tracking-tight">Create New Project</span>
+</button>
+<button class="w-full text-left p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all flex items-center gap-4 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="group_add">group_add</span>
+<span class="font-bold text-sm tracking-tight">Invite Collaborator</span>
+</button>
+<button class="w-full text-left p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all flex items-center gap-4 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="analytics">analytics</span>
+<span class="font-bold text-sm tracking-tight">Generate Insights</span>
+</button>
+<button class="w-full text-left p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all flex items-center gap-4 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="cloud_sync">cloud_sync</span>
+<span class="font-bold text-sm tracking-tight">Sync Documents</span>
+</button>
+</div>
+</div>
+<!-- Pinned Item / Featured Card -->
+<div class="bg-primary text-on-primary p-8 rounded-xl shadow-lg relative overflow-hidden group">
+<div class="absolute inset-0 opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-700 pointer-events-none" data-alt="Abstract pattern of green leaf veins" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbfLB2DYcLI5cAtEzniTdv51eX6hnJBUuJ7oSgrGFv-9myWiWWsVZY2eD3Ansd8pwc520-ghlwEUUIkpP7qg56HGbP-64hypIUf8p2GtCkFblpTvtqoPDm2MVXpf_0370CfBbwswLNB7E59ylCYEc1oZnrKTd24E6HsUnV0bpWVd1QFfwfLXl9WXVP4Tvl5F9qMGHIWK1pkdE6_PqyAzov2_mSj4BSESK4lHRNdX5T_MZ8S9G0LQpyq0Yvm8LjNSRvyk50fTfBtzU'); background-size: cover;"></div>
+<div class="relative z-10">
+<span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-4">Upcoming Event</span>
+<h4 class="text-2xl font-extrabold tracking-tight mb-2 leading-tight">Sustainability Summit 2024</h4>
+<p class="text-sm text-white/80 mb-6">Join the global community to discuss eco-friendly design standards in Helsinki.</p>
+<button class="px-4 py-2 bg-white text-primary font-bold rounded-lg text-sm hover:bg-on-primary-fixed transition-colors">
+                                View Details
+                            </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

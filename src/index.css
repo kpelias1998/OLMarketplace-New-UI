@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-display bg-background-light text-slate-900;
+  }
+  .dark body {
+    @apply bg-background-dark text-slate-100;
+  }
+
+  /* ── Global form field styles ─────────────────────────────────
+     Applies to all inputs (except checkbox / radio / file / range),
+     textareas, and selects. Individual pages can still override any
+     of these via Tailwind utility classes applied directly to the
+     element — utility classes always win over base styles.
+  ─────────────────────────────────────────────────────────────── */
+  input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),
+  textarea,
+  select {
+    /* Layout & shape */
+    @apply w-full rounded-xl px-3.5 py-2.5 text-sm;
+
+    /* Appearance */
+    @apply border border-slate-300 bg-white text-slate-900;
+    @apply placeholder:text-slate-400;
+
+    /* Smooth colour transitions on interaction */
+    @apply transition-colors duration-150;
+
+    /* Hover — gentle darkening of border so users can see where to click */
+    @apply hover:border-slate-400;
+
+    /* Focus — primary brand colour border + soft glow ring */
+    @apply focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20;
+
+    /* Disabled — visually muted so the state is immediately obvious */
+    @apply disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400 disabled:placeholder:text-slate-300;
+  }
+
+  /* Select arrow stays visible in all browsers */
+  select {
+    @apply cursor-pointer;
+  }
+
+  /* Textarea — allow vertical resize only so layouts don't break */
+  textarea {
+    @apply resize-y;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
