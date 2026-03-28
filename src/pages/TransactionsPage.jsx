@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { userApi } from '../api'
+import { useSettings } from '../context/SettingsContext'
 
 const TRX_LABEL = {
   '+': { text: 'Credit', style: 'bg-green-100 text-green-700', icon: 'arrow_downward' },
@@ -16,6 +17,7 @@ function formatMoney(amount) {
 }
 
 export default function TransactionsPage() {
+  const { curSym } = useSettings()
   const [transactions, setTransactions] = useState([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -89,9 +91,9 @@ export default function TransactionsPage() {
                     </div>
                     <div className="text-right">
                       <p className="font-extrabold text-sm text-slate-900">
-                        {tx.trx_type === '-' ? '-' : '+'}P{formatMoney(tx.amount)}
+                        {tx.trx_type === '-' ? '-' : '+'}{formatMoney(tx.amount)} {curSym}
                       </p>
-                      <p className="text-xs text-slate-500">Bal: P{formatMoney(tx.post_balance)}</p>
+                      <p className="text-xs text-slate-500">Bal: {formatMoney(tx.post_balance)} {curSym}</p>
                     </div>
                   </div>
                 )

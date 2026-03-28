@@ -8,6 +8,7 @@ import Spinner from '../components/Spinner'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { productImgUrl } from '../utils/assets'
+import { useSettings } from '../context/SettingsContext'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23e2e8f0"/%3E%3Ctext x="200" y="210" text-anchor="middle" fill="%2394a3b8" font-family="Inter,sans-serif" font-size="18"%3ENo Image%3C/text%3E%3C/svg%3E'
 
@@ -19,6 +20,7 @@ export default function ProductDetailsPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const { addToCart } = useCart()
 
   const [product, setProduct] = useState(null)
@@ -117,7 +119,7 @@ export default function ProductDetailsPage() {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight">{product.name}</h1>
             </div>
 
-            <div className="text-3xl font-bold text-primary">₱{Number(product.price).toLocaleString()}</div>
+            <div className="text-3xl font-bold text-primary">{Number(product.price).toLocaleString()} {curSym}</div>
 
             <div className="flex flex-col gap-4 py-6 border-y border-primary/10">
               <div className="flex items-center gap-2">

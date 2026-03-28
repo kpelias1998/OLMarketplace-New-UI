@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { plansApi, userApi } from '../api'
+import { useSettings } from '../context/SettingsContext'
 
 function formatMoney(amount) {
   return Number(amount || 0).toLocaleString('en', {
@@ -11,6 +12,7 @@ function formatMoney(amount) {
 }
 
 function SubscribeModal({ plan, onClose, onSuccess }) {
+  const { curSym } = useSettings()
   const [voucher, setVoucher] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -48,7 +50,7 @@ function SubscribeModal({ plan, onClose, onSuccess }) {
         <div className="bg-primary/5 rounded-xl p-4 mb-5 space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-slate-500 font-medium">Plan Cost</span>
-            <span className="font-extrabold text-primary">₱{formatMoney(plan.price)}</span>
+            <span className="font-extrabold text-primary">{formatMoney(plan.price)} {curSym}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-500 font-medium">Business Volume (BV)</span>
@@ -57,7 +59,7 @@ function SubscribeModal({ plan, onClose, onSuccess }) {
           {plan.tree_com > 0 && (
             <div className="flex justify-between">
               <span className="text-slate-500 font-medium">Tree Commission</span>
-              <span className="font-semibold text-slate-800">₱{formatMoney(plan.tree_com)}</span>
+              <span className="font-semibold text-slate-800">{formatMoney(plan.tree_com)} {curSym}</span>
             </div>
           )}
         </div>
@@ -110,6 +112,7 @@ function SubscribeModal({ plan, onClose, onSuccess }) {
 }
 
 export default function PlanPage() {
+  const { curSym } = useSettings()
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -223,7 +226,7 @@ export default function PlanPage() {
                 </p>
                 <h2 className="text-2xl font-extrabold">{plan.name}</h2>
                 <p className="text-3xl font-extrabold mt-2">
-                  ₱{formatMoney(plan.price)}
+                  {formatMoney(plan.price)} {curSym}
                 </p>
               </div>
 
@@ -243,7 +246,7 @@ export default function PlanPage() {
                     <div>
                       <p className="text-xs text-slate-400 font-medium">Tree Commission</p>
                       <p className="text-sm font-extrabold text-slate-800">
-                        ₱{formatMoney(plan.tree_com)}
+                        {formatMoney(plan.tree_com)} {curSym}
                         {plan.tree_com_limit > 0 && (
                           <span className="text-slate-500 font-normal ml-1">
                             ({plan.tree_com_limit} levels)
@@ -259,7 +262,7 @@ export default function PlanPage() {
                     <span className="material-symbols-outlined text-primary text-lg">share</span>
                     <div>
                       <p className="text-xs text-slate-400 font-medium">Indirect Referral Commission</p>
-                      <p className="text-sm font-extrabold text-slate-800">₱{formatMoney(plan.indirectref_com)}</p>
+                      <p className="text-sm font-extrabold text-slate-800">{formatMoney(plan.indirectref_com)} {curSym}</p>
                     </div>
                   </div>
                 )}
@@ -289,7 +292,7 @@ export default function PlanPage() {
                 ) : (
                   <button
                     onClick={() => setSelectedPlan(plan)}
-                    className="w-full rounded-xl bg-primary py-3 text-sm font-bold text-white hover:bg-primary/90 transition-colors"
+                    className="w-full rounded-xl bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600 transition-colors"
                   >
                     Subscribe Now
                   </button>

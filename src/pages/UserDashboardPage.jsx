@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import { userApi } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { useSettings } from '../context/SettingsContext'
 import Navbar from '../components/Navbar'
 import Spinner from '../components/Spinner'
 import AccountSidebar from '../components/AccountSidebar'
@@ -11,10 +13,33 @@ const TRX_ICONS = {
   '-': 'arrow_upward',
 }
 
+function QRCodeModal({ username, onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-xl font-extrabold text-slate-900">My QR Code</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="p-4 bg-white border border-slate-100 rounded-xl shadow-inner">
+            <QRCodeSVG value={String(username)} size={200} />
+          </div>
+          <p className="text-xs text-slate-400 font-medium">Username: <span className="font-bold text-slate-600">{username}</span></p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function UserDashboardPage() {
   const { user, logout } = useAuth()
+  const { curSym } = useSettings()
   const navigate = useNavigate()
   const [sidebarOpen] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
 
   const [userInfo, setUserInfo] = useState(null)
   const [totalAccumulated, setTotalAccumulated] = useState(null)
@@ -63,10 +88,10 @@ export default function UserDashboardPage() {
     navigate('/login')
   }
 
-  const cur = user?.currency?.sym || '₱'
+  const cur = curSym
 
   const fmt = (val) =>
-    `${cur}${parseFloat(val || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    `${parseFloat(val || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${cur}`
 
   return (
     <div className="min-h-screen bg-background-light flex flex-col">
@@ -327,6 +352,14 @@ export default function UserDashboardPage() {
                     </div>
                   </div>
 
+                  <button
+                    onClick={() => setQrOpen(true)}
+                    className="w-full mb-4 flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 py-2.5 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base">qr_code_2</span>
+                    Show My QR Code
+                  </button>
+
                   <div className="space-y-2.5 text-sm text-slate-500">
                     {user?.mobile && (
                       <div className="flex items-center gap-2">
@@ -337,7 +370,11 @@ export default function UserDashboardPage() {
                     {user?.address && (
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-base text-slate-400">location_on</span>
-                        <span className="truncate">{user.address}</span>
+                        <span className="truncate">
+                          {typeof user.address === 'object'
+                            ? [user.address.address, user.address.city, user.address.state, user.address.zip, user.address.country].filter(Boolean).join(', ')
+                            : user.address}
+                        </span>
                       </div>
                     )}
                     {user?.username && (
@@ -386,6 +423,10 @@ export default function UserDashboardPage() {
           </main>
         </div>
       </div>
+
+      {qrOpen && user?.username && (
+        <QRCodeModal username={user.username} onClose={() => setQrOpen(false)} />
+      )}
     </div>
   )
 }

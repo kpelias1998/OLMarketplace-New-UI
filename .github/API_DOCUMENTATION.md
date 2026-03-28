@@ -186,7 +186,7 @@ No authentication token required.
 
 ### General Settings
 
-Returns global site configuration used by the app.
+Returns the full global site configuration used by the app.
 
 **GET** `/api/general-setting`
 
@@ -198,24 +198,148 @@ None.
 {
   "status": "success",
   "data": {
-    "site_name": "OLMarketplace",
-    "cur_text": "PHP",
+    "id": 1,
+    "sitename": "OLMarketplace",
+    "cur_text": "OLC",
     "cur_sym": "₱",
-    "base_color": "#ff6600",
+    "base_color": "b2d566",
+    "secondary_color": "80af46",
+    "active_template": "basic",
     "ev": 0,
-    "sv": 0
+    "en": 0,
+    "sv": 0,
+    "sn": 0,
+    "force_ssl": 0,
+    "secure_password": 0,
+    "agree": 1,
+    "registration": 1,
+    "autodebit": 0,
+    "lock_referral": 0,
+    "lock_bds_indirect": 0,
+    "lock_binary": 0,
+    "lock_unilevel": 0,
+    "trial_limit_hours": 72,
+    "expiration_warning_days": 3,
+    "smb_limit_days": 30,
+    "bv_price": "10.00000000",
+    "total_bv": "100.00000000",
+    "max_bv": 5000,
+    "cary_flash": 0,
+    "bal_trans_per_charge": "0.00",
+    "bal_trans_fixed_charge": "0.00000000",
+    "payout_percentage": "70.00000000",
+    "company_percentage": "20.00000000",
+    "user_percentage": "5.00000000",
+    "manager_percentage": "5.00000000",
+    "matrix_width": 0,
+    "matrix_height": 4,
+    "bds_width": 0,
+    "bds_height": 4,
+    "matching_bonus_time": "daily",
+    "matching_when": "1",
+    "company_user": 11,
+    "notice": "<p>All User notice...</p>",
+    "free_user_notice": "<p>Free User notice...</p>",
+    "last_paid": null,
+    "last_cron": "2021-12-07T16:47:01.000000Z",
+    "created_at": null,
+    "updated_at": "2023-11-23T18:46:45.000000Z",
+    "sys_version": null,
+    "email_from": "do-not-reply@example.com",
+    "mail_config": { "name": "php" },
+    "sms_config": { "name": "clickatell" }
   }
 }
 ```
 
-| Field       | Type    | Description                                          |
-|-------------|---------|------------------------------------------------------|
-| `site_name` | string  | Application name                                     |
-| `cur_text`  | string  | Currency code (e.g. `PHP`, `USD`)                    |
-| `cur_sym`   | string  | Currency symbol (e.g. `₱`, `$`)                      |
-| `base_color`| string  | Primary brand color (hex)                            |
-| `ev`        | integer | `1` = Email verification required globally           |
-| `sv`        | integer | `1` = SMS verification required globally             |
+##### Core Site Fields
+
+| Field              | Type    | Description                                              |
+|--------------------|---------|----------------------------------------------------------|
+| `id`               | integer | Record ID (always `1`)                                   |
+| `sitename`         | string  | Application / site name                                  |
+| `cur_text`         | string  | Currency code (e.g. `OLC`, `USD`)                        |
+| `cur_sym`          | string  | Currency symbol (e.g. `₱`, `$`)                          |
+| `base_color`       | string  | Primary brand colour (hex without `#`)                   |
+| `secondary_color`  | string  | Secondary brand colour (hex without `#`)                 |
+| `active_template`  | string  | Active frontend template name                            |
+
+##### Feature-Flag Fields
+
+| Field               | Type    | Description                                             |
+|---------------------|---------|---------------------------------------------------------|
+| `ev`                | integer | `1` = Email verification required                       |
+| `en`                | integer | `1` = Email notifications enabled                       |
+| `sv`                | integer | `1` = SMS verification required                         |
+| `sn`                | integer | `1` = SMS notifications enabled                         |
+| `force_ssl`         | integer | `1` = Force HTTPS site-wide                             |
+| `secure_password`   | integer | `1` = Strong-password policy enforced                   |
+| `agree`             | integer | `1` = Terms acceptance required at registration         |
+| `registration`      | integer | `1` = Public registration enabled                       |
+| `autodebit`         | integer | `1` = Auto-debit on plan renewal enabled                |
+| `cary_flash`        | integer | `1` = Carry-flash feature enabled                       |
+
+##### Earning-Lock Fields
+
+| Field               | Type    | Description                                             |
+|---------------------|---------|---------------------------------------------------------|
+| `lock_referral`     | integer | `1` = Referral commission earnings locked when plan expires |
+| `lock_bds_indirect` | integer | `1` = BDS indirect earnings locked when plan expires    |
+| `lock_binary`       | integer | `1` = Binary earnings locked when plan expires          |
+| `lock_unilevel`     | integer | `1` = Unilevel earnings locked when plan expires        |
+
+##### Plan / Membership Fields
+
+| Field                   | Type    | Description                                         |
+|-------------------------|---------|-----------------------------------------------------|
+| `trial_limit_hours`     | integer | Trial period duration in hours                      |
+| `expiration_warning_days` | integer | Days before plan expiry to show warning            |
+| `smb_limit_days`        | integer | Days after which Super Matching Bonus is released   |
+
+##### Commission / BV Fields
+
+| Field                   | Type    | Description                                         |
+|-------------------------|---------|-----------------------------------------------------|
+| `bv_price`              | decimal | Value of one BV point in currency                   |
+| `total_bv`              | decimal | Total BV in circulation                             |
+| `max_bv`                | integer | Maximum BV cap                                      |
+| `bal_trans_per_charge`  | decimal | Balance-transfer percentage charge                  |
+| `bal_trans_fixed_charge`| decimal | Balance-transfer fixed charge                       |
+| `payout_percentage`     | decimal | Payout share percentage                             |
+| `company_percentage`    | decimal | Company share percentage                            |
+| `user_percentage`       | decimal | User share percentage                               |
+| `manager_percentage`    | decimal | Manager share percentage                            |
+
+##### MLM Structure Fields
+
+| Field                | Type    | Description                                            |
+|----------------------|---------|--------------------------------------------------------|
+| `matrix_width`       | integer | Unilevel matrix width                                  |
+| `matrix_height`      | integer | Unilevel matrix height (levels)                        |
+| `bds_width`          | integer | BDS matrix width                                       |
+| `bds_height`         | integer | BDS matrix height (levels)                             |
+| `matching_bonus_time`| string  | Matching bonus schedule: `daily`, `weekly`, `monthly`  |
+| `matching_when`      | string  | Scheduled day or time slot for matching bonus payout   |
+| `company_user`       | integer | User ID assigned as the company root node              |
+
+##### Notice / Content Fields
+
+| Field              | Type   | Description                                              |
+|--------------------|--------|----------------------------------------------------------|
+| `notice`           | string | HTML notice shown to all users                           |
+| `free_user_notice` | string | HTML notice shown to users without an active plan        |
+
+##### System / Timestamp Fields
+
+| Field         | Type     | Description                           |
+|---------------|----------|---------------------------------------|
+| `last_paid`   | datetime | Timestamp of the last payout run      |
+| `last_cron`   | datetime | Timestamp of the last cron execution  |
+| `sys_version` | string   | Installed system version string       |
+| `created_at`  | datetime | Record creation timestamp             |
+| `updated_at`  | datetime | Record last-updated timestamp         |
+
+> **Note:** The response also includes `email_from`, `email_template`, `sms_api`, `mail_config`, and `sms_config`. These are server-side configuration fields returned by the full model; the mobile app should ignore them.
 
 ---
 

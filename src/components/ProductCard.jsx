@@ -5,12 +5,14 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 import { productImgUrl } from '../utils/assets'
+import { useSettings } from '../context/SettingsContext'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect width="300" height="300" fill="%23e2e8f0"/%3E%3Ctext x="150" y="160" text-anchor="middle" fill="%2394a3b8" font-family="Inter,sans-serif" font-size="14"%3ENo Image%3C/text%3E%3C/svg%3E'
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart()
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const navigate = useNavigate()
   const [adding, setAdding] = useState(false)
   const [toast, setToast] = useState(null)
@@ -61,7 +63,7 @@ export default function ProductCard({ product }) {
             )}
             <h3 className="mt-1 text-base font-bold text-slate-800 truncate">{product.name}</h3>
           </div>
-          <p className="text-lg font-bold text-primary ml-2 shrink-0">₱{Number(product.price).toLocaleString()}</p>
+          <p className="text-lg font-bold text-primary ml-2 shrink-0">{Number(product.price).toLocaleString()} {curSym}</p>
         </div>
         <div className="mt-auto pt-4">
           <button

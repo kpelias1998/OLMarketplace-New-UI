@@ -114,6 +114,7 @@ export default function ProfileSettingsPage() {
               value={form.mobile}
               onChange={onChange}
               className="w-full rounded-xl border-slate-200 focus:border-primary focus:ring-primary"
+              disabled
             />
           </label>
 

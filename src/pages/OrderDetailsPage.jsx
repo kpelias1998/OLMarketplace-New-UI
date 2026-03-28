@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ordersApi } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { useSettings } from '../context/SettingsContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Spinner from '../components/Spinner'
@@ -18,6 +19,7 @@ const STATUS_MAP = {
 export default function OrderDetailsPage() {
   const { id } = useParams()
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const navigate = useNavigate()
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -148,7 +150,7 @@ export default function OrderDetailsPage() {
                       <p className="text-sm text-slate-500">Qty: {item.quantity ?? 1}</p>
                     </div>
                     <p className="font-bold text-slate-900 shrink-0">
-                      ₱{(Number(item.price ?? item.unit_price ?? 0) * Number(item.quantity ?? 1)).toLocaleString()}
+                      {(Number(item.price ?? item.unit_price ?? 0) * Number(item.quantity ?? 1)).toLocaleString()} {curSym}
                     </p>
                   </div>
                 ))}
@@ -239,24 +241,24 @@ export default function OrderDetailsPage() {
               <div className="flex flex-col gap-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Subtotal</span>
-                  <span className="font-medium">₱{subtotal.toLocaleString()}</span>
+                  <span className="font-medium">{subtotal.toLocaleString()} {curSym}</span>
                 </div>
                 {order.shipcost > 0 && (
                   <div className="flex justify-between">
                     <span className="text-slate-500">Shipping</span>
-                    <span className="font-medium">₱{Number(order.shipcost ?? 0).toLocaleString()}</span>
+                    <span className="font-medium">{Number(order.shipcost ?? 0).toLocaleString()} {curSym}</span>
                   </div>
                 )}
                 {(order.discount || order.voucher_discount) > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Discount</span>
-                    <span className="font-medium">-₱{Number(order.discount ?? order.voucher_discount ?? 0).toLocaleString()}</span>
+                    <span className="font-medium">-{Number(order.discount ?? order.voucher_discount ?? 0).toLocaleString()} {curSym}</span>
                   </div>
                 )}
                 <div className="border-t border-slate-100 mt-2 pt-2 flex justify-between">
                   <span className="font-bold text-slate-900">Total Paid</span>
                   <span className="font-extrabold text-primary">
-                    ₱{Number(order.total_price ?? 0).toLocaleString()}
+                    {Number(order.total_price ?? 0).toLocaleString()} {curSym}
                   </span>
                 </div>
               </div>

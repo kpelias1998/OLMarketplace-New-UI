@@ -1,5 +1,6 @@
 import { useLocation, Link } from 'react-router-dom'
 import {  productImgUrl } from '../utils/assets'
+import { useSettings } from '../context/SettingsContext'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64"%3E%3Crect width="64" height="64" fill="%23e2e8f0"/%3E%3C/svg%3E'
 function imgUrl(path) {
@@ -7,6 +8,7 @@ function imgUrl(path) {
 }
 
 export default function OrderConfirmationPage() {
+  const { curSym } = useSettings()
   const { state } = useLocation()
   const order = state?.order
 
@@ -59,7 +61,7 @@ export default function OrderConfirmationPage() {
                       <p className="font-semibold">{o.product?.name || `Product #${o.product_id}`}</p>
                       <p className="text-sm text-slate-500">Qty: {o.quantity}</p>
                     </div>
-                    <p className="font-bold">₱{Number(o.total_price).toLocaleString()}</p>
+                    <p className="font-bold">{Number(o.total_price).toLocaleString()} {curSym}</p>
                   </div>
                 ))}
               </div>
@@ -67,7 +69,7 @@ export default function OrderConfirmationPage() {
               <div className="space-y-2 border-t border-primary/5 pt-4">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total Paid</span>
-                  <span className="text-primary">₱{Number(order.total_paid).toLocaleString()}</span>
+                  <span className="text-primary">{Number(order.total_paid).toLocaleString()} {curSym}</span>
                 </div>
               </div>
             </div>

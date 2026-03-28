@@ -129,6 +129,11 @@ export const transferApi = {
   searchUser: (data) => api.post('/transfer/search-user', data),
 }
 
+/* ── General Settings (public) ───────────────────────────────── */
+export const settingsApi = {
+  get: () => api.get('/general-setting'),
+}
+
 /* ── General ──────────────────────────────────────────────────── */
 export const generalApi = {
   settings: () => api.get('/general-setting'),

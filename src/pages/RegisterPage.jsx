@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Spinner from '../components/Spinner'
 
 export default function RegisterPage() {
   const { register } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const referral = searchParams.get('referral') || ''
+  const position = searchParams.get('position') || ''
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -26,7 +29,7 @@ export default function RegisterPage() {
     setGlobalError(null)
     setLoading(true)
     try {
-      await register(form)
+      await register({ ...form, ...(referral && { referral }), ...(position && { position: Number(position) }) })
       navigate('/')
     } catch (err) {
       if (err.response?.data?.errors) {

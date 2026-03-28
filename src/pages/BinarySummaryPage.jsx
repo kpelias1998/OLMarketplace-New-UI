@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { plansApi } from '../api'
+import { useSettings } from '../context/SettingsContext'
 
 function formatMoney(amount) {
   return Number(amount || 0).toLocaleString('en', {
@@ -35,6 +36,7 @@ function StatCard({ icon, label, value, accent }) {
 }
 
 export default function BinarySummaryPage() {
+  const { curSym } = useSettings()
   /* ─── Binary Summary ─────────────────────────────────────────── */
   const [summary, setSummary] = useState([])
   const [summaryLoading, setSummaryLoading] = useState(true)
@@ -421,10 +423,10 @@ export default function BinarySummaryPage() {
                       </div>
                       <div className="text-right shrink-0">
                         <p className="font-extrabold text-sm text-green-700">
-                          +₱{formatMoney(com.amount)}
+                          +{formatMoney(com.amount)} {curSym}
                         </p>
                         <p className="text-xs text-slate-500">
-                          Bal: ₱{formatMoney(com.post_balance)}
+                          Bal: {formatMoney(com.post_balance)} {curSym}
                         </p>
                       </div>
                     </div>

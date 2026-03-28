@@ -7,7 +7,7 @@ export const ACCOUNT_NAV_ITEMS = [
   { label: 'OLPay',            icon: 'payment', to: '/transfer' },
   { label: 'Plans',            icon: 'workspace_premium', to: '/plans' },
   { label: 'My Referrals',     icon: 'group',         to: '/my-referrals' },
-  { label: 'Binary Summary',   icon: 'account_tree',  to: '/binary-summary' },
+  // { label: 'Binary Summary',   icon: 'account_tree',  to: '/binary-summary' },
   { label: 'Transactions',     icon: 'receipt',       to: '/transactions' },
   { label: 'My Orders',        icon: 'receipt_long',  to: '/orders' },
   { label: 'Support Tickets',  icon: 'support_agent', to: '/support-tickets' },

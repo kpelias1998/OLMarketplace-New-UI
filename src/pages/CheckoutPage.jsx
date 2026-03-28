@@ -6,6 +6,7 @@ import Spinner from '../components/Spinner'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { productImgUrl } from '../utils/assets'
+import { useSettings } from '../context/SettingsContext'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect width="80" height="80" fill="%23e2e8f0"/%3E%3C/svg%3E'
 function imgUrl(path) {
@@ -16,6 +17,7 @@ const STEPS = ['Shipping', 'Review & Pay']
 
 export default function CheckoutPage() {
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const { cart, fetchCart, clearCart } = useCart()
   const navigate = useNavigate()
 
@@ -227,7 +229,7 @@ export default function CheckoutPage() {
                     </button>
                     {shipCost !== null && (
                       <span className="text-sm font-bold text-primary">
-                        ₱{Number(shipCost).toLocaleString()}
+                        {Number(shipCost).toLocaleString()} {curSym}
                       </span>
                     )}
                   </div>
@@ -279,7 +281,7 @@ export default function CheckoutPage() {
                     <div>
                       <p className="font-bold">OLPay Wallet</p>
                       <p className="text-sm text-slate-500">
-                        Balance: ₱{Number(summary?.user?.sw_balance || 0).toLocaleString()}
+                        Balance: {Number(summary?.user?.sw_balance || 0).toLocaleString()} {curSym}
                       </p>
                     </div>
                     <span className="material-symbols-outlined text-primary ml-auto">check_circle</span>
@@ -342,7 +344,7 @@ export default function CheckoutPage() {
                         <p className="text-xs text-slate-500">Qty: {item.quantity}</p>
                       </div>
                       <p className="text-sm font-bold">
-                        ₱{(Number(item.product?.price) * item.quantity).toLocaleString()}
+                        {(Number(item.product?.price) * item.quantity).toLocaleString()} {curSym}
                       </p>
                     </div>
                   ))}
@@ -351,24 +353,24 @@ export default function CheckoutPage() {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Subtotal</span>
-                    <span className="font-medium">₱{Number(subtotal).toLocaleString()}</span>
+                    <span className="font-medium">{Number(subtotal).toLocaleString()} {curSym}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Discount ({voucherData?.voucher_name})</span>
-                      <span className="font-medium">-₱{Number(discount).toLocaleString()}</span>
+                      <span className="font-medium">-{Number(discount).toLocaleString()} {curSym}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span className="text-slate-500">Shipping</span>
                     <span className={`font-medium ${shipping === 0 ? 'text-primary' : ''}`}>
-                      {shipping === 0 && shipCost === null ? 'TBD' : `₱${Number(shipping).toLocaleString()}`}
+                      {shipping === 0 && shipCost === null ? 'TBD' : `${Number(shipping).toLocaleString()} ${curSym}`}
                     </span>
                   </div>
                   <hr className="border-primary/5" />
                   <div className="flex justify-between items-center">
                     <span className="text-base font-bold">Total</span>
-                    <span className="text-2xl font-bold text-primary">₱{Number(total).toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-primary">{Number(total).toLocaleString()} {curSym}</span>
                   </div>
                 </div>
               </div>
@@ -394,7 +396,7 @@ export default function CheckoutPage() {
                 </div>
                 {voucherData && (
                   <p className="mt-2 text-xs text-green-600 font-semibold">
-                    ✓ {voucherData.voucher_name} — ₱{Number(voucherData.discount).toLocaleString()} off
+                    ✓ {voucherData.voucher_name} — {Number(voucherData.discount).toLocaleString()} {curSym} off
                   </p>
                 )}
                 {voucherErr && <p className="mt-2 text-xs text-red-500">{voucherErr}</p>}

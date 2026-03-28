@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import jsQR from 'jsqr'
 import { userApi, transferApi, withdrawApi, depositApi } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { useSettings } from '../context/SettingsContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Spinner from '../components/Spinner'
@@ -12,10 +14,105 @@ const TRX_ICONS = {
   '-': 'arrow_upward',
 }
 
+function QRScannerModal({ onScan, onClose }) {
+  const [cameraError, setCameraError] = useState(null)
+  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
+  const onScanRef = useRef(onScan)
+  onScanRef.current = onScan
+
+  useEffect(() => {
+    let cancelled = false
+    let rafId = null
+    let stream = null
+
+    const startCamera = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return }
+        const video = videoRef.current
+        if (!video) return
+        video.srcObject = stream
+        await video.play()
+
+        const scan = () => {
+          if (cancelled) return
+          if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            const canvas = canvasRef.current
+            if (canvas) {
+              canvas.width = video.videoWidth
+              canvas.height = video.videoHeight
+              const ctx = canvas.getContext('2d')
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+              const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+              const code = jsQR(imageData.data, imageData.width, imageData.height)
+              if (code?.data) {
+                onScanRef.current(code.data)
+                return
+              }
+            }
+          }
+          rafId = requestAnimationFrame(scan)
+        }
+        rafId = requestAnimationFrame(scan)
+      } catch {
+        if (!cancelled) setCameraError('Camera access denied or not available.')
+      }
+    }
+
+    startCamera()
+
+    return () => {
+      cancelled = true
+      if (rafId) cancelAnimationFrame(rafId)
+      if (stream) stream.getTracks().forEach((t) => t.stop())
+    }
+  }, [])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-extrabold text-slate-900">Scan QR Code</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        {cameraError ? (
+          <div className="text-center py-10">
+            <span className="material-symbols-outlined text-5xl text-slate-300 block mb-2">camera_off</span>
+            <p className="text-sm text-red-500 font-medium">{cameraError}</p>
+          </div>
+        ) : (
+          <>
+            <p className="text-xs text-slate-400 mb-3 text-center">Point your camera at the recipient's QR code</p>
+            <div className="relative rounded-xl overflow-hidden bg-black aspect-square">
+              <video ref={videoRef} className="w-full h-full object-cover" playsInline muted />
+              <canvas ref={canvasRef} className="hidden" />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-48 h-48 border-2 border-white/80 rounded-xl" />
+              </div>
+            </div>
+          </>
+        )}
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-full mt-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function OLPayPage() {
   const { user, logout } = useAuth()
+  const { curSym } = useSettings()
   const navigate = useNavigate()
   const [sidebarOpen] = useState(false)
+  const [qrScannerOpen, setQrScannerOpen] = useState(false)
 
   const [userInfo, setUserInfo] = useState(null)
   const [stats, setStats] = useState(null)
@@ -282,6 +379,12 @@ export default function OLPayPage() {
     }
   }
 
+  const handleQRScan = (text) => {
+    setBalUsername(text.trim())
+    setBalSuccess(null)
+    setQrScannerOpen(false)
+  }
+
   const handleMerchantTransfer = async (e) => {
     e.preventDefault()
     setMerchantError(null)
@@ -303,10 +406,10 @@ export default function OLPayPage() {
     }
   }
 
-  const cur = user?.currency?.sym || '₱'
+  const cur = curSym
 
   const fmt = (val) =>
-    `${cur}${parseFloat(val || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    `${parseFloat(val || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${cur}`
 
   return (
     <div className="min-h-screen bg-background-light flex flex-col">
@@ -854,20 +957,31 @@ export default function OLPayPage() {
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">
                       Recipient Username
                     </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={balUsername}
-                        onChange={(e) => { setBalUsername(e.target.value); setBalSuccess(null) }}
-                        placeholder="Enter username or email"
-                        className="w-full px-4 py-2.5 pr-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
-                        required
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base material-symbols-outlined">
-                        {balSearchStatus === 'checking' && <span className="text-slate-400 animate-spin text-base">progress_activity</span>}
-                        {balSearchStatus === 'found' && <span className="text-primary text-base">check_circle</span>}
-                        {balSearchStatus === 'notfound' && <span className="text-red-500 text-base">cancel</span>}
-                      </span>
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <input
+                          type="text"
+                          value={balUsername}
+                          onChange={(e) => { setBalUsername(e.target.value); setBalSuccess(null) }}
+                          placeholder="Enter username or email"
+                          className="w-full px-4 py-2.5 pr-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                          required
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base material-symbols-outlined">
+                          {balSearchStatus === 'checking' && <span className="text-slate-400 animate-spin text-base">progress_activity</span>}
+                          {balSearchStatus === 'found' && <span className="text-primary text-base">check_circle</span>}
+                          {balSearchStatus === 'notfound' && <span className="text-red-500 text-base">cancel</span>}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setQrScannerOpen(true)}
+                        className="px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:bg-primary/5 hover:text-primary hover:border-primary/20 transition-colors shrink-0"
+                        aria-label="Scan QR Code"
+                        title="Scan QR Code"
+                      >
+                        <span className="material-symbols-outlined text-xl">qr_code_scanner</span>
+                      </button>
                     </div>
                     {balSearchStatus === 'notfound' && (
                       <p className="text-xs text-red-500 mt-1">User not found.</p>
@@ -1037,6 +1151,10 @@ export default function OLPayPage() {
           </main>
         </div>
       </div>
+
+      {qrScannerOpen && (
+        <QRScannerModal onScan={handleQRScan} onClose={() => setQrScannerOpen(false)} />
+      )}
     </div>
   )
 }

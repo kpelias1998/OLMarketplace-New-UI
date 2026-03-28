@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { plansApi } from '../api'
+import { useAuth } from '../context/AuthContext'
 
 const STATUS_LABEL = {
   1: { text: 'Active', style: 'bg-green-100 text-green-700' },
@@ -19,12 +20,25 @@ function getInitials(user) {
 }
 
 export default function MyReferralsPage() {
+  const { user } = useAuth()
+  const [copied, setCopied] = useState(null)
   const [referrals, setReferrals] = useState([])
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const baseUrl = window.location.origin
+  const refLink1 = `${baseUrl}/register?referral=${user?.username || ''}&position=1`
+  const refLink2 = `${baseUrl}/register?referral=${user?.username || ''}&position=2`
+
+  function copyLink(link, key) {
+    navigator.clipboard.writeText(link).then(() => {
+      setCopied(key)
+      setTimeout(() => setCopied(null), 2000)
+    })
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -64,6 +78,37 @@ export default function MyReferralsPage() {
         ) : null
       }
     >
+      {/* Referral Links */}
+      <section className="bg-white rounded-2xl border border-primary/10 p-5 mb-6 space-y-4">
+        <h3 className="text-sm font-extrabold text-slate-700 flex items-center gap-2">
+          <span className="material-symbols-outlined text-base text-primary">link</span>
+          Your Referral Links
+        </h3>
+        {[{ label: 'Team A', link: refLink1, key: 1 }, { label: 'Team B', link: refLink2, key: 2 }].map(({ label, link, key }) => (
+          <div key={key}>
+            <p className="text-xs font-semibold text-slate-500 mb-1.5">{label}</p>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                disabled
+                value={link}
+                className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-600 font-mono cursor-default select-all focus:outline-none"
+              />
+              <button
+                onClick={() => copyLink(link, key)}
+                className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {copied === key ? 'check' : 'content_copy'}
+                </span>
+                {copied === key ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          </div>
+        ))}
+      </section>
+
       {loading && (
         <div className="flex items-center justify-center py-24">
           <Spinner size="lg" />

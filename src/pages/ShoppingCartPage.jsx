@@ -6,6 +6,7 @@ import Spinner from '../components/Spinner'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { productImgUrl } from '../utils/assets'
+import { useSettings } from '../context/SettingsContext'
 
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="96" height="96"%3E%3Crect width="96" height="96" fill="%23e2e8f0"/%3E%3C/svg%3E'
 
@@ -15,6 +16,7 @@ function imgUrl(path) {
 
 export default function ShoppingCartPage() {
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const { cart, fetchCart, updateItem, removeItem, loading } = useCart()
   const navigate = useNavigate()
 
@@ -94,7 +96,7 @@ export default function ShoppingCartPage() {
                           </button>
                         </div>
                         <p className="text-primary text-xl font-bold">
-                          ₱{(Number(item.product?.price) * item.quantity).toLocaleString()}
+                          {(Number(item.product?.price) * item.quantity).toLocaleString()} {curSym}
                         </p>
                       </div>
                     </div>
@@ -109,7 +111,7 @@ export default function ShoppingCartPage() {
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-slate-600">
                       <span>Subtotal ({cart.count} items)</span>
-                      <span className="font-medium text-slate-900">₱{Number(cart.subtotal).toLocaleString()}</span>
+                      <span className="font-medium text-slate-900">{Number(cart.subtotal).toLocaleString()} {curSym}</span>
                     </div>
                     <div className="flex justify-between text-slate-600">
                       <span>Shipping</span>
@@ -119,7 +121,7 @@ export default function ShoppingCartPage() {
                   <div className="pt-6 border-t border-primary/10 mb-8">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-bold">Subtotal</span>
-                      <span className="text-2xl font-bold text-primary">₱{Number(cart.subtotal).toLocaleString()}</span>
+                      <span className="text-2xl font-bold text-primary">{Number(cart.subtotal).toLocaleString()} {curSym}</span>
                     </div>
                   </div>
                   <button

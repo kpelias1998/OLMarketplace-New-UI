@@ -1,6 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
+import { SettingsProvider } from './context/SettingsContext'
 import HomePage from './pages/HomePage'
 import ProductCatalogPage from './pages/ProductCatalogPage'
 import ProductDetailsPage from './pages/ProductDetailsPage'
@@ -24,10 +26,34 @@ import MyReferralsPage from './pages/MyReferralsPage'
 import BinarySummaryPage from './pages/BinarySummaryPage'
 import OLPayPage from './pages/OLPayPage'
 
+function AdminTokenHandler() {
+  const { loginWithToken } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const adminToken = params.get('adminToken')
+    if (!adminToken) return
+
+    params.delete('adminToken')
+    const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '')
+    window.history.replaceState({}, '', newUrl)
+
+    loginWithToken(adminToken).then(() => {
+      navigate('/dashboard')
+    })
+  }, [])
+
+  return null
+}
+
 export default function App() {
+  
   return (
-    <AuthProvider>
-      <CartProvider>
+    <SettingsProvider>
+      <AuthProvider>
+        <CartProvider>
+        <AdminTokenHandler />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<ProductCatalogPage />} />
@@ -55,5 +81,6 @@ export default function App() {
         </Routes>
       </CartProvider>
     </AuthProvider>
+    </SettingsProvider>
   )
 }

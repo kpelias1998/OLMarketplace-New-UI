@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ordersApi } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { useSettings } from '../context/SettingsContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Spinner from '../components/Spinner'
@@ -17,6 +18,7 @@ const STATUS_MAP = {
 
 export default function OrdersPage() {
   const { user } = useAuth()
+  const { curSym } = useSettings()
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
   const [page, setPage] = useState(1)
@@ -109,7 +111,7 @@ export default function OrdersPage() {
                   <div className="flex items-center gap-3 shrink-0">
                     <div className="text-right">
                       <p className="text-xs text-slate-400 uppercase tracking-wide font-medium">Total</p>
-                      <p className="font-extrabold text-lg text-slate-900">₱{Number(order.total_price ?? order.total_price ?? 0).toLocaleString()}</p>
+                      <p className="font-extrabold text-lg text-slate-900">{Number(order.total_price ?? order.total_price ?? 0).toLocaleString()} {curSym}</p>
                     </div>
                     <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
                   </div>
