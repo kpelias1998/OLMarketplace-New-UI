@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { userApi } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useSettings } from '../context/SettingsContext'
+import { useTrial } from '../context/TrialContext'
 import Navbar from '../components/Navbar'
 import Spinner from '../components/Spinner'
 import AccountSidebar from '../components/AccountSidebar'
@@ -37,6 +38,7 @@ function QRCodeModal({ username, onClose }) {
 export default function UserDashboardPage() {
   const { user, logout } = useAuth()
   const { curSym } = useSettings()
+  const { hasPurchasedPlan, countdown, planCountdown } = useTrial()
   const navigate = useNavigate()
   const [sidebarOpen] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
@@ -68,11 +70,16 @@ export default function UserDashboardPage() {
         setTotalAccumulated(parseFloat(infoRes.data?.data?.total_ref_com || 0) + parseFloat(infoRes.data?.data?.total_binary_com || 0) + parseFloat(infoRes.data?.data?.total_unilevel_com || 0))
         setStats(dashRes.data?.data || dashRes.data)
         const txData = txRes.data?.data || txRes.data
+        let firstPageTx = []
+        let lastPage = 1
         if (Array.isArray(txData)) {
+          firstPageTx = txData
           setTransactions(txData)
         } else {
-          setTransactions(txData?.data || [])
-          setTxLastPage(txData?.last_page || 1)
+          firstPageTx = txData?.data || []
+          lastPage = txData?.last_page || 1
+          setTransactions(firstPageTx)
+          setTxLastPage(lastPage)
         }
       } catch {
         setError('Failed to load dashboard data. Please try again.')
@@ -122,6 +129,106 @@ export default function UserDashboardPage() {
             My Orders
           </Link>
         </section>
+
+        {/* ── Plan Expiry Warning ─────────────────────────────────── */}
+        {!loading && hasPurchasedPlan && planCountdown !== null && (() => {
+          const totalSecs = Math.floor(planCountdown / 1000)
+          const days = Math.floor(totalSecs / 86400)
+          const hrs  = Math.floor((totalSecs % 86400) / 3600)
+          const mins = Math.floor((totalSecs % 3600) / 60)
+          const secs = totalSecs % 60
+          const expired = planCountdown === 0
+          const urgent = !expired && days < 7
+          return (
+            <section className={`mb-8 rounded-xl p-5 border flex flex-col sm:flex-row sm:items-center gap-4 ${
+              expired || urgent ? 'bg-red-50 border-red-200 text-red-800' : 'bg-amber-50 border-amber-200 text-amber-900'
+            }`}>
+              <span className={`material-symbols-outlined text-3xl shrink-0 ${
+                expired || urgent ? 'text-red-500' : 'text-amber-500'
+              }`}>
+                {expired ? 'error' : 'event_busy'}
+              </span>
+              <div className="flex-1 min-w-0">
+                {expired ? (
+                  <>
+                    <p className="font-extrabold text-base">Plan Expired</p>
+                    <p className="text-sm mt-0.5 text-red-700">
+                      Your active plan has expired. Renew to maintain your commissions and benefits.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-extrabold text-base">Plan Expiring Soon</p>
+                    <p className="text-sm mt-0.5">
+                      Your current plan expires in{' '}
+                      <span className="font-bold tabular-nums">
+                        {days > 0
+                          ? `${days}d ${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`
+                          : `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`
+                        }
+                      </span>. Please top up your registration wallet.
+                    </p>
+                  </>
+                )}
+              </div>
+              <a
+                href="/plans"
+                className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-colors ${
+                  expired || urgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-amber-500 text-white hover:bg-amber-600'
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">workspace_premium</span>
+                Renew Plan
+              </a>
+            </section>
+          )
+        })()}
+
+        {/* ── Trial Countdown Warning ─────────────────────────────── */}
+        {!loading && hasPurchasedPlan === false && countdown !== null && (
+          <section className={`mb-8 rounded-xl p-5 border flex flex-col sm:flex-row sm:items-center gap-4 ${
+            countdown === 0
+              ? 'bg-red-50 border-red-200 text-red-800'
+              : 'bg-amber-50 border-amber-200 text-amber-900'
+          }`}>
+            <span className={`material-symbols-outlined text-3xl shrink-0 ${
+              countdown === 0 ? 'text-red-500' : 'text-amber-500'
+            }`}>
+              {countdown === 0 ? 'error' : 'hourglass_top'}
+            </span>
+            <div className="flex-1 min-w-0">
+              {countdown === 0 ? (
+                <>
+                  <p className="font-extrabold text-base">Trial Period Expired</p>
+                  <p className="text-sm mt-0.5 text-red-700">
+                    Your free trial has ended. Purchase a plan to continue enjoying full access.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="font-extrabold text-base">Free Trial Active</p>
+                  <p className="text-sm mt-0.5">
+                    You haven't purchased a plan yet. Your trial expires in{' '}
+                    <span className="font-bold tabular-nums">
+                      {String(Math.floor(countdown / (1000 * 60 * 60))).padStart(2, '0')}h{' '}
+                      {String(Math.floor((countdown % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0')}m{' '}
+                      {String(Math.floor((countdown % (1000 * 60)) / 1000)).padStart(2, '0')}s
+                    </span>.
+                  </p>
+                </>
+              )}
+            </div>
+            {countdown > 0 && (
+              <Link
+                to="/plans"
+                className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-sm transition-colors bg-amber-500 text-white hover:bg-amber-600"
+              >
+                <span className="material-symbols-outlined text-base">star</span>
+                Get a Plan
+              </Link>
+            )}
+          </section>
+        )}
 
         {/* ── Loading ────────────────────────────────────────────── */}
         {loading && (

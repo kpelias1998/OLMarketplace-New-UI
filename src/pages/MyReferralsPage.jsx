@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { plansApi } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { useTrial } from '../context/TrialContext'
 
 const STATUS_LABEL = {
   1: { text: 'Active', style: 'bg-green-100 text-green-700' },
@@ -21,6 +23,8 @@ function getInitials(user) {
 
 export default function MyReferralsPage() {
   const { user } = useAuth()
+  const { trialExpired } = useTrial()
+  const navigate = useNavigate()
   const [copied, setCopied] = useState(null)
   const [referrals, setReferrals] = useState([])
   const [page, setPage] = useState(1)
@@ -39,6 +43,10 @@ export default function MyReferralsPage() {
       setTimeout(() => setCopied(null), 2000)
     })
   }
+
+  useEffect(() => {
+    if (trialExpired) navigate('/dashboard', { replace: true })
+  }, [trialExpired, navigate])
 
   useEffect(() => {
     const load = async () => {

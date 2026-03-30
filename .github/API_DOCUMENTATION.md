@@ -86,7 +86,9 @@ Flutter Mobile App — REST API Reference
     - [Registration Wallet Transfer](#registration-wallet-transfer)
     - [Merchant Transfer](#merchant-transfer)
     - [Search User](#search-user)
-17. [Enumerations & Status Codes](#enumerations--status-codes)
+17. [Unilevel Tree](#unilevel-tree)
+    - [Get My Unilevel Tree](#get-my-unilevel-tree)
+18. [Enumerations & Status Codes](#enumerations--status-codes)
 
 ---
 
@@ -3243,6 +3245,70 @@ Checks whether a user with the given username or email exists. Use this to valid
 | Field   | Type    | Description                              |
 |---------|---------|------------------------------------------|
 | `found` | boolean | `true` if the user exists, `false` if not|
+
+---
+
+## Unilevel Tree
+
+All endpoints require authentication.
+
+---
+
+### Get My Unilevel Tree
+
+Returns the authenticated user's full unilevel (Campaign Rewards) referral tree as a nested structure. Depth is capped by the `matrix_height` value from [General Settings](#general-settings).
+
+**GET** `/api/user/unilevel-tree`
+
+#### Request Parameters
+None.
+
+#### Response `200`
+```json
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "username": "johndoe",
+    "fullname": "John Doe",
+    "image_url": "https://yourdomain.com/assets/images/user/profile/johndoe.jpg",
+    "children": [
+      {
+        "id": 2,
+        "username": "janedoe",
+        "fullname": "Jane Doe",
+        "image_url": "https://yourdomain.com/assets/images/user/profile/janedoe.png",
+        "children": [
+          {
+            "id": 5,
+            "username": "bobsmith",
+            "fullname": "Bob Smith",
+            "image_url": "https://yourdomain.com/placeholder/350x300",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "username": "alicew",
+        "fullname": "Alice Wong",
+        "image_url": "https://yourdomain.com/assets/images/user/profile/alicew.jpg",
+        "children": []
+      }
+    ]
+  }
+}
+```
+
+| Field       | Type    | Description                                                                 |
+|-------------|---------|-----------------------------------------------------------------------------|
+| `id`        | integer | User ID                                                                     |
+| `username`  | string  | Username                                                                    |
+| `fullname`  | string  | Full name (`firstname` + `lastname`)                                        |
+| `image_url` | string  | Absolute URL to the user's profile photo. Falls back to a placeholder image URL if no photo is set. |
+| `children`  | array   | Direct downline members, each recursively containing the same structure     |
+
+> **Note:** The tree is depth-limited by `matrix_height` from General Settings. Nodes at the maximum depth will always have an empty `children` array.
 
 ---
 

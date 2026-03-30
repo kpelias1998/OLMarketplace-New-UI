@@ -134,6 +134,11 @@ export const settingsApi = {
   get: () => api.get('/general-setting'),
 }
 
+/* ── Unilevel Tree ────────────────────────────────────────────── */
+export const uniLevelApi = {
+  tree: () => api.get('/user/unilevel-tree'),
+}
+
 /* ── General ──────────────────────────────────────────────────── */
 export const generalApi = {
   settings: () => api.get('/general-setting'),

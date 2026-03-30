@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import { SettingsProvider } from './context/SettingsContext'
+import { TrialProvider } from './context/TrialContext'
 import HomePage from './pages/HomePage'
 import ProductCatalogPage from './pages/ProductCatalogPage'
 import ProductDetailsPage from './pages/ProductDetailsPage'
@@ -25,6 +26,7 @@ import PlanPage from './pages/PlanPage'
 import MyReferralsPage from './pages/MyReferralsPage'
 import BinarySummaryPage from './pages/BinarySummaryPage'
 import OLPayPage from './pages/OLPayPage'
+import UniLevelTreePage from './pages/UniLevelTreePage'
 
 function AdminTokenHandler() {
   const { loginWithToken } = useAuth()
@@ -52,6 +54,7 @@ export default function App() {
   return (
     <SettingsProvider>
       <AuthProvider>
+        <TrialProvider>
         <CartProvider>
         <AdminTokenHandler />
         <Routes>
@@ -73,13 +76,15 @@ export default function App() {
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/plans" element={<PlanPage />} />
           <Route path="/my-referrals" element={<MyReferralsPage />} />
+          <Route path="/my-tree" element={<UniLevelTreePage />} />
           <Route path="/binary-summary" element={<BinarySummaryPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </CartProvider>
+        </CartProvider>
+        </TrialProvider>
     </AuthProvider>
     </SettingsProvider>
   )

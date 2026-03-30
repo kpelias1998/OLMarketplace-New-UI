@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTrial } from '../context/TrialContext'
 
 export const ACCOUNT_NAV_ITEMS = [
   { label: 'Dashboard',        icon: 'dashboard',     to: '/dashboard' },
   { label: 'OLPay',            icon: 'payment', to: '/transfer' },
   { label: 'Plans',            icon: 'workspace_premium', to: '/plans' },
   { label: 'My Referrals',     icon: 'group',         to: '/my-referrals' },
+  { label: 'My Tree',    icon: 'account_tree',  to: '/my-tree' },
   // { label: 'Binary Summary',   icon: 'account_tree',  to: '/binary-summary' },
   { label: 'Transactions',     icon: 'receipt',       to: '/transactions' },
   { label: 'My Orders',        icon: 'receipt_long',  to: '/orders' },
@@ -32,9 +34,14 @@ function isActivePath(pathname, to) {
  */
 export default function AccountSidebar({ navItems = ACCOUNT_NAV_ITEMS }) {
   const { user, logout } = useAuth()
+  const { trialExpired } = useTrial()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
+
+  const visibleNavItems = trialExpired
+    ? navItems.filter(({ to }) => to !== '/plans' && to !== '/my-referrals')
+    : navItems
 
   const handleLogout = async () => {
     setOpen(false)
@@ -89,7 +96,7 @@ export default function AccountSidebar({ navItems = ACCOUNT_NAV_ITEMS }) {
 
         {/* Nav links */}
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-          {navItems.map(({ label, icon, to }) => {
+          {visibleNavItems.map(({ label, icon, to }) => {
             const isActive = isActivePath(pathname, to)
             return (
               <Link

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AccountLayout from '../components/AccountLayout'
 import Spinner from '../components/Spinner'
 import { plansApi, userApi } from '../api'
 import { useSettings } from '../context/SettingsContext'
+import { useTrial } from '../context/TrialContext'
 
 function formatMoney(amount) {
   return Number(amount || 0).toLocaleString('en', {
@@ -25,7 +27,7 @@ function SubscribeModal({ plan, onClose, onSuccess }) {
       const payload = { plan_id: plan.id }
       if (voucher.trim()) payload.voucher = voucher.trim()
       await plansApi.subscribe(payload)
-      onSuccess(plan.name)
+      onSuccess(plan.id, plan.name)
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -113,12 +115,19 @@ function SubscribeModal({ plan, onClose, onSuccess }) {
 
 export default function PlanPage() {
   const { curSym } = useSettings()
+  const { trialExpired, refreshTrial, hasPurchasedPlan, planCountdown, activePlanId } = useTrial()
+  const planExpired = hasPurchasedPlan && planCountdown === 0
+  const navigate = useNavigate()
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [successMsg, setSuccessMsg] = useState('')
   const [subscribedPlanIds, setSubscribedPlanIds] = useState(new Set())
+
+  useEffect(() => {
+    if (trialExpired) navigate('/dashboard', { replace: true })
+  }, [trialExpired, navigate])
 
   useEffect(() => {
     const load = async () => {
@@ -173,10 +182,12 @@ export default function PlanPage() {
     load()
   }, [])
 
-  const handleSuccess = (planName) => {
+  const handleSuccess = (planId, planName) => {
     setSelectedPlan(null)
+    setSubscribedPlanIds((prev) => new Set([...prev, Number(planId)]))
     setSuccessMsg(`Successfully subscribed to ${planName}!`)
     setTimeout(() => setSuccessMsg(''), 4000)
+    refreshTrial()
   }
 
   return (
@@ -292,9 +303,13 @@ export default function PlanPage() {
                 ) : (
                   <button
                     onClick={() => setSelectedPlan(plan)}
-                    className="w-full rounded-xl bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600 transition-colors"
+                    className={`w-full rounded-xl py-3 text-sm font-bold text-white transition-colors ${
+                      planExpired && Number(plan.id) === activePlanId
+                        ? 'bg-amber-500 hover:bg-amber-600'
+                        : 'bg-red-500 hover:bg-red-600'
+                    }`}
                   >
-                    Subscribe Now
+                    {planExpired && Number(plan.id) === activePlanId ? 'Upgrade Now' : 'Subscribe Now'}
                   </button>
                 )}
               </div>
