@@ -8,6 +8,7 @@ import { useTrial } from '../context/TrialContext'
 import Navbar from '../components/Navbar'
 import Spinner from '../components/Spinner'
 import AccountSidebar from '../components/AccountSidebar'
+import { userImgUrl } from '../utils/assets'
 
 const TRX_ICONS = {
   '+': 'arrow_downward',
@@ -443,9 +444,31 @@ export default function UserDashboardPage() {
                 {/* Profile Card */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-primary/5">
                   <div className="flex items-center gap-4 mb-5">
-                    <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-extrabold text-xl shrink-0 select-none">
-                      {/* {initials} */}
-                    </div>
+                    {(() => {
+                      const imgPath = userInfo?.image || user?.image
+                      const initials = [user?.firstname, user?.lastname]
+                        .filter(Boolean)
+                        .map((n) => n[0].toUpperCase())
+                        .join('') || (user?.username?.[0]?.toUpperCase() ?? '?')
+                        console.log('User image path:', imgPath)
+                      return imgPath ? (
+                        <img
+                          src={userImgUrl(imgPath)}
+                          alt={initials}
+                          className="h-14 w-14 rounded-full object-cover shrink-0"
+                          onError={(e) => {
+                            e.target.replaceWith(Object.assign(document.createElement('div'), {
+                              className: 'h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-extrabold text-xl shrink-0 select-none',
+                              textContent: initials,
+                            }))
+                          }}
+                        />
+                      ) : (
+                        <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-extrabold text-xl shrink-0 select-none">
+                          {initials}
+                        </div>
+                      )
+                    })()}
                     <div className="min-w-0">
                       <p className="font-extrabold text-base text-slate-900 truncate">
                         {[user?.firstname, user?.lastname].filter(Boolean).join(' ') || user?.username}

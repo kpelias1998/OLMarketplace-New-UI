@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
@@ -7,8 +7,21 @@ export default function Navbar() {
   const { user, logout } = useAuth()
   const { cart } = useCart()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const [search, setSearch] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const downloadShortcut = () => {
+    const url = window.location.href
+    const content = `[InternetShortcut]\nURL=${url}\n`
+    const blob = new Blob([content], { type: 'text/plain' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    const slug = pathname.replace(/\/+/g, '-').replace(/^-/, '') || 'home'
+    a.download = `olmarketplace-${slug}.url`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -45,6 +58,14 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-2 md:gap-3">
+          <button
+            onClick={downloadShortcut}
+            title="Save shortcut to this page"
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
+          >
+            <span className="material-symbols-outlined">bookmark_add</span>
+          </button>
+
           <Link
             to="/cart"
             className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"

@@ -12,3 +12,6 @@ export const assetUrl = (path) => `${BASE_URL}/assets/images/${path}`
 
 /** Builds a URL for product images stored under /assets/images/products/ */
 export const productImgUrl = (path) => `${BASE_URL}/assets/images/products/${path}`
+
+/** Builds a URL for user images stored under /assets/images/users/ */
+export const userImgUrl = (path) => `${BASE_URL}/assets/images/user/profile/${path}`

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import { productsApi } from '../api'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -196,9 +197,12 @@ export default function ProductDetailsPage() {
             ))}
           </div>
           {activeTab === 'description' && (
-            <div className="prose max-w-none text-slate-600 leading-relaxed">
-              {product.description || 'No description available for this product.'}
-            </div>
+            product.description
+              ? <div
+                  className="prose max-w-none text-slate-600 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description) }}
+                />
+              : <p className="text-slate-500">No description available for this product.</p>
           )}
           {activeTab === 'details' && (
             <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 max-w-md">

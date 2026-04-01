@@ -31,7 +31,7 @@ export default function LoginPage() {
       {/* Logo Header */}
       <header className="flex items-center px-8 py-4 border-b border-primary/10 bg-white">
         <Link to="/" className="flex items-center gap-2 text-primary">
-          <span className="material-symbols-outlined text-3xl">eco</span>
+          <img src="/logo.png" alt="OLMarketplace" className="h-8 w-auto" />
           <h2 className="text-xl font-bold tracking-tight">OLMarketplace</h2>
         </Link>
       </header>

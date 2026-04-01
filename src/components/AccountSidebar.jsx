@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTrial } from '../context/TrialContext'
+import { userImgUrl } from '../utils/assets'
 
 export const ACCOUNT_NAV_ITEMS = [
   { label: 'Dashboard',        icon: 'dashboard',     to: '/dashboard' },
@@ -82,7 +83,18 @@ export default function AccountSidebar({ navItems = ACCOUNT_NAV_ITEMS }) {
         {/* User identity */}
         <div className="px-5 py-5 border-b border-primary/10">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-extrabold shrink-0 select-none">
+            {user?.image ? (
+              <img
+                src={userImgUrl(user.image)}
+                alt={initials}
+                className="h-10 w-10 rounded-full object-cover shrink-0"
+                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
+              />
+            ) : null}
+            <div
+              className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-extrabold shrink-0 select-none"
+              style={{ display: user?.image ? 'none' : 'flex' }}
+            >
               {initials}
             </div>
             <div className="min-w-0">
